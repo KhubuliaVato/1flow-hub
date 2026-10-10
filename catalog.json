@@ -1,0 +1,24 @@
+[
+  {
+    "id": "flow-downloader",
+    "name": "1Flow Downloader",
+    "iconText": "↓",
+    "iconUrl": "https://raw.githubusercontent.com/KhubuliaVato/flow-downloader/main/icon.png",
+    "description": "მედია ფაილების ჩამოტვირთვა, კონვერტაცია და ავტომატური ფორმატირება.",
+    "repoOwner": "KhubuliaVato",
+    "repoName": "flow-downloader",
+    "assetMatch": "downloader.zip",
+    "executableName": "downloader.exe"
+  },
+  {
+    "id": "super-recorder",
+    "name": "1Flow SuperRecorder",
+    "iconText": "●",
+    "iconUrl": "https://raw.githubusercontent.com/KhubuliaVato/super-recorder/main/icon.png",
+    "description": "ეკრანის ჩაწერა: მონიტორი, პროგრამა ან მთელი ეკრანი, ხმა კომპიუტერიდან და მიკროფონიდან.",
+    "repoOwner": "KhubuliaVato",
+    "repoName": "super-recorder",
+    "assetMatch": "SuperRecorder.zip",
+    "executableName": "SuperRecorder.exe"
+  }
+]
