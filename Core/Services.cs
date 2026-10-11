@@ -18,7 +18,7 @@ public sealed class AppSettings
         "https://raw.githubusercontent.com/KhubuliaVato/tvflow-hub/main/catalog.json";
     // where the hub looks for its OWN updates
     public string HubOwner { get; set; } = "KhubuliaVato";
-    public string HubRepo { get; set; } = "tvflow-hub";
+    public string HubRepo { get; set; } = "1flow-hub";
     public string HubAsset { get; set; } = "1FlowHub.zip";
 
     public static AppSettings Load() => Json.TryReadFile<AppSettings>(Paths.SettingsFile) ?? new AppSettings();

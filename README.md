@@ -18,6 +18,7 @@ powershell -ExecutionPolicy Bypass -File build.ps1   # → 1FlowHub.zip (self-co
 * **ლოგი** — `%LOCALAPPDATA%\1Flow\hub.log`.
 
 ## გამოშვება
-1. გაზარდე `<Version>` `1FlowHub.csproj`-ში
-2. `build.ps1`
-3. GitHub-ზე შექმენი release (tag `v2.x.x`) და ატვირთე `1FlowHub.zip`
+1. გაზარდე `<Version>` `1FlowHub.csproj`-ში და დააკომიტე
+2. შექმენი tag და ატვირთე: `git tag v2.0.1` → `git push --tags`
+3. GitHub Actions თვითონ ააგებს და გამოაქვეყნებს `1FlowHub.zip`-ს release-ად (`.github/workflows/release.yml`).
+   საიტი და HUB-ის თვითგანახლება ამ release-ს ავტომატურად იპოვის.
