@@ -29,6 +29,7 @@ public sealed class AppVM : Bindable
 
     private List<ReleaseInfo> _releases = new();
     private string? _installedTag;
+    private DateTimeOffset? _installedAt;
     private bool _busy, _loading = true;
     private double _progress;
     private string _busyText = "";
@@ -74,6 +75,8 @@ public sealed class AppVM : Bindable
     public bool HasUpdate => IsInstalled && Latest != null && VersionUtil.IsNewer(Latest.Version, _installedTag);
     public bool Unavailable => !_loading && !IsInstalled && Latest == null;
     private bool PrimaryEnabled => IsInstalled || Latest != null;
+    public bool PrimaryEnabledUi => !IsBusy && PrimaryEnabled;
+    public bool CanUpdate => HasUpdate && !IsBusy;
 
     public string VersionText =>
         IsInstalled ? (HasUpdate ? $"v{VersionUtil.Clean(_installedTag)} → v{Latest!.Version}" : $"v{VersionUtil.Clean(_installedTag)}")
@@ -106,6 +109,50 @@ public sealed class AppVM : Bindable
 
     private static Brush Frozen(Brush b) { b.Freeze(); return b; }
 
+
+    // ── presentation (library cards, list rows, drawer)
+    public string CategoryText => string.IsNullOrWhiteSpace(Entry.Category) ? "პროგრამა" : Entry.Category!;
+    public string SizeText
+    {
+        get
+        {
+            var a = Latest == null ? null : Installer.PickAsset(Latest, Entry.AssetMatch);
+            return a == null ? "—" : Ka.Size(a.Size);
+        }
+    }
+    public string UpdatedText => Latest == null ? "—" : Ka.Date(Latest.Published);
+    public string UpdatedAgo => Latest == null ? "" : Ka.Ago(Latest.Published);
+    public string InstalledText => _installedAt == null ? (IsInstalled ? "დაინსტალირებულია" : "—") : Ka.Date(_installedAt.Value);
+    public string LatestSummary => Latest == null ? Description : (Notes.Summary(Latest.Body) is { Length: > 0 } s ? s : Description);
+    public string LatestVersionText => Latest == null ? "—" : "v" + Latest.Version;
+    public string InstalledVersionText => IsInstalled && _installedTag != "0" ? "v" + VersionUtil.Clean(_installedTag) : "—";
+
+    public string BadgeText =>
+        _busy ? "მიმდინარეობს"
+        : _loading ? "…"
+        : HasUpdate ? "განახლება"
+        : IsInstalled ? "დაინსტალირებულია"
+        : Latest != null ? "ხელმისაწვდომია"
+        : "მიუწვდომელია";
+
+    public Brush BadgeBackground =>
+        _busy ? Frozen(new SolidColorBrush(Color.FromArgb(0x40, 0x7C, 0x8C, 0xFF)))
+        : HasUpdate ? Frozen(new SolidColorBrush(Color.FromArgb(0x40, 0xFF, 0xC4, 0x6B)))
+        : IsInstalled ? Frozen(new SolidColorBrush(Color.FromArgb(0x38, 0x5C, 0xE6, 0xA0)))
+        : Frozen(new SolidColorBrush(Color.FromArgb(0x2A, 255, 255, 255)));
+
+    public Brush BadgeForeground =>
+        _busy ? Frozen(new SolidColorBrush(Color.FromRgb(0xC9, 0xD1, 0xFF)))
+        : HasUpdate ? Frozen(new SolidColorBrush(Color.FromRgb(0xFF, 0xD9, 0x9B)))
+        : IsInstalled ? Frozen(new SolidColorBrush(Color.FromRgb(0x9B, 0xF2, 0xC6)))
+        : Frozen(new SolidColorBrush(Color.FromRgb(0xC9, 0xCD, 0xE6)));
+
+    public bool Matches(string q) =>
+        string.IsNullOrWhiteSpace(q)
+        || Name.Contains(q, StringComparison.CurrentCultureIgnoreCase)
+        || Description.Contains(q, StringComparison.CurrentCultureIgnoreCase)
+        || CategoryText.Contains(q, StringComparison.CurrentCultureIgnoreCase);
+
     // ── details panel
     public List<ReleaseTab> Tabs { get; private set; } = new();
     private ReleaseTab? _selected;
@@ -137,7 +184,9 @@ public sealed class AppVM : Bindable
         {
             var rels = await GitHub.GetReleasesAsync(Entry.RepoOwner, Entry.RepoName, 5, force);
             _releases = rels ?? new();
-            _installedTag = Installer.GetInstalled(Id)?.Tag
+            var rec = Installer.GetInstalled(Id);
+            _installedAt = rec?.InstalledAt;
+            _installedTag = rec?.Tag
                             ?? (Installer.FindExe(Id, Entry.ExecutableName) != null ? "0" : null);
             Tabs = _releases.Select(r => new ReleaseTab { Tag = r.Tag, Release = r }).ToList();
             if (Tabs.Count > 0) SelectTab(Tabs[0]);
@@ -179,6 +228,9 @@ public sealed class AppVM : Bindable
         {
             nameof(IsLoading), nameof(IsInstalled), nameof(InstalledTag), nameof(HasUpdate), nameof(Unavailable),
             nameof(VersionText), nameof(StatusText), nameof(PrimaryText), nameof(PrimaryBrush), nameof(PrimaryForeground),
+            nameof(BadgeText), nameof(BadgeBackground), nameof(BadgeForeground), nameof(SizeText), nameof(UpdatedText),
+            nameof(UpdatedAgo), nameof(InstalledText), nameof(LatestSummary), nameof(LatestVersionText), nameof(InstalledVersionText),
+            nameof(PrimaryEnabledUi),
         }) Raise(n);
         CommandManager.InvalidateRequerySuggested();
     }
@@ -196,7 +248,7 @@ public sealed class AppVM : Bindable
         await InstallAsync();
     }
 
-    private async Task InstallAsync()
+    public async Task InstallAsync()
     {
         var rel = Latest;
         if (rel == null) return;
@@ -207,6 +259,7 @@ public sealed class AppVM : Bindable
             bool wasUpdate = HasUpdate;
             await Installer.InstallAsync(Id, rel, Entry.AssetMatch, prog);
             _installedTag = rel.Tag;
+            _installedAt = DateTimeOffset.Now;
             _host.Toast(wasUpdate ? $"{Name} განახლდა — v{rel.Version}" : $"{Name} დაინსტალირდა");
             _host.NotifyAppsChanged();
         }

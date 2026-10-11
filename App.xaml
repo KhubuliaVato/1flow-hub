@@ -263,5 +263,88 @@
             </Setter>
         </Style>
 
+
+        <!-- ───────── segmented chip (filters / view switch) ───────── -->
+        <Style x:Key="Chip" TargetType="RadioButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" CornerRadius="11" Padding="14,7" Background="Transparent">
+                            <TextBlock x:Name="Tx" Text="{TemplateBinding Content}" FontFamily="{TemplateBinding FontFamily}"
+                                       Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Tx" Property="Foreground" Value="{StaticResource Text}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#26FFFFFF"/>
+                                <Setter TargetName="Tx" Property="Foreground" Value="{StaticResource Text}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ChipIcon" TargetType="RadioButton" BasedOn="{StaticResource Chip}">
+            <Setter Property="FontFamily" Value="{StaticResource Icons}"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- ───────── search box ───────── -->
+        <Style x:Key="Search" TargetType="TextBox">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="CaretBrush" Value="{StaticResource Text}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Bd" Background="#14FFFFFF" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="14" Height="42">
+                            <Grid>
+                                <TextBlock Text="&#xE721;" FontFamily="{StaticResource Icons}" FontSize="14" Foreground="{StaticResource Muted}"
+                                           VerticalAlignment="Center" Margin="15,0,0,0"/>
+                                <TextBlock x:Name="Hint" Text="ძებნა პროგრამებში…" Foreground="#80A9AEC9" VerticalAlignment="Center"
+                                           Margin="42,0,0,0" IsHitTestVisible="False"/>
+                                <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="42,0,14,0" Focusable="False"
+                                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Hint" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#99B9C4FF"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#1CFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ───────── small text roles ───────── -->
+        <Style x:Key="Overline" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#80A9AEC9"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        </Style>
+        <Style x:Key="H1" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontWeight" Value="Light"/>
+        </Style>
+        <Style x:Key="H2" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="Hint" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+        </Style>
+
     </Application.Resources>
 </Application>

@@ -66,6 +66,10 @@ public static class GitHub
 {
     public static readonly HttpClient Http = CreateClient();
 
+    /// <summary>true after a successful GitHub call, false after a failed one (cache was used).</summary>
+    public static bool Online { get; private set; } = true;
+    public static DateTime? LastSync { get; private set; }
+
     private static HttpClient CreateClient()
     {
         var c = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
@@ -86,7 +90,11 @@ public static class GitHub
         var cachePath = Path.Combine(Paths.Cache, $"rel_{owner}_{repo}.json");
         var cached = Json.TryReadFile<CacheFile>(cachePath);
         if (!force && cached != null && DateTimeOffset.Now - cached.At < TimeSpan.FromMinutes(10))
+        {
+            var at = cached.At.LocalDateTime;
+            if (LastSync == null || at > LastSync) LastSync = at;
             return cached.Releases;
+        }
         try
         {
             using var resp = await Http.GetAsync($"https://api.github.com/repos/{owner}/{repo}/releases?per_page={count}");
@@ -115,11 +123,13 @@ public static class GitHub
                 list.Add(rel);
             }
             Json.TryWriteFile(cachePath, new CacheFile { At = DateTimeOffset.Now, Releases = list });
+            Online = true; LastSync = DateTime.Now;
             return list;
         }
         catch (Exception ex)
         {
             Log.Info($"releases {owner}/{repo}: {ex.Message}");
+            Online = false;
             return cached?.Releases;
         }
     }
@@ -158,6 +168,7 @@ public sealed class CatalogEntry
     public string RepoName { get; set; } = "";
     public string? AssetMatch { get; set; }
     public string? ExecutableName { get; set; }
+    public string? Category { get; set; }
 }
 
 public static class Catalog

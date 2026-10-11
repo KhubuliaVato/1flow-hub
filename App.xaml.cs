@@ -22,7 +22,8 @@ public partial class App : Application
         // one instance only — a second launch just brings the first one forward
         _single = new Mutex(true, "1FlowHub.SingleInstance", out bool first);
         _showSignal = new EventWaitHandle(false, EventResetMode.AutoReset, "1FlowHub.Show");
-        if (!first)
+        bool snapshotRun = e.Args.Any(a => a.StartsWith("--snapshot="));
+        if (!first && !snapshotRun)
         {
             _showSignal.Set();
             Shutdown();
@@ -44,8 +45,16 @@ public partial class App : Application
         }) { IsBackground = true };
         th.Start();
 
+        string? snapshot = e.Args.FirstOrDefault(a => a.StartsWith("--snapshot="))?[11..];
+        if (snapshot != null)
+        {
+            _window.WindowStartupLocation = WindowStartupLocation.Manual;
+            _window.Left = -6000; _window.Top = 0;
+            _window.ShowInTaskbar = false;
+        }
+
         bool startHidden = e.Args.Contains("--tray") && settings.CloseToTray;
-        if (!startHidden) _window.Show();
+        if (!startHidden || snapshot != null) _window.Show();
 
         await _vm.LoadAsync();
 
@@ -59,6 +68,37 @@ public partial class App : Application
                 if (app != null) _vm.OpenDetails(app);
             }
         }
+
+        if (snapshot != null)
+        {
+            await Task.Delay(3500);   // let icons load and entrance animations finish
+            SaveSnapshot(_window, snapshot);
+            Shutdown();
+        }
+    }
+
+    /// <summary>Dev helper: renders the window's visual tree to a PNG without touching the screen.</summary>
+    private static void SaveSnapshot(Window w, string path)
+    {
+        try
+        {
+            var root = (FrameworkElement)w.Content;
+            root.UpdateLayout();
+            int pw = (int)root.ActualWidth, ph = (int)root.ActualHeight;
+            var bmp = new System.Windows.Media.Imaging.RenderTargetBitmap(pw, ph, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+            var dv = new System.Windows.Media.DrawingVisual();
+            using (var dc = dv.RenderOpen())
+            {
+                dc.DrawRectangle(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x08, 0x0A, 0x1C)), null, new Rect(0, 0, pw, ph));
+                dc.DrawRectangle(new System.Windows.Media.VisualBrush(root), null, new Rect(0, 0, pw, ph));
+            }
+            bmp.Render(dv);
+            var enc = new System.Windows.Media.Imaging.PngBitmapEncoder();
+            enc.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bmp));
+            using var fs = System.IO.File.Create(path);
+            enc.Save(fs);
+        }
+        catch (Exception ex) { Log.Error(ex); }
     }
 
     private void ShowWindow()

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using OneFlowHub.Core;
 using OneFlowHub.ViewModels;
@@ -9,12 +10,20 @@ namespace OneFlowHub;
 public partial class MainWindow : Window
 {
     private readonly MainVM _vm;
+    private readonly FrameworkElement[] _pages;
+    private int _shownPage = 0;
 
     public MainWindow(MainVM vm)
     {
         InitializeComponent();
         _vm = vm;
         DataContext = vm;
+        _pages = new FrameworkElement[] { HomePage, LibraryPage, UpdatesPage, SettingsPage };
+        foreach (var p in _pages)
+        {
+            p.RenderTransform = new TranslateTransform();
+            p.RenderTransformOrigin = new Point(0.5, 0.5);
+        }
 
         SourceInitialized += (_, _) => Dwm.Apply(this);
         StateChanged += (_, _) => Root.Margin = WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0);
@@ -39,31 +48,50 @@ public partial class MainWindow : Window
 
     private void OnVmChanged(object? s, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainVM.HasDetails)) AnimateDetails(_vm.HasDetails);
-        else if (e.PropertyName == nameof(MainVM.ToastOn)) AnimateToast(_vm.ToastOn);
+        switch (e.PropertyName)
+        {
+            case nameof(MainVM.Page): ShowPage(_vm.Page); break;
+            case nameof(MainVM.HasDetails): AnimateDrawer(_vm.HasDetails); break;
+            case nameof(MainVM.ToastOn): AnimateToast(_vm.ToastOn); break;
+        }
     }
 
-    // ── details overlay
-    private void AnimateDetails(bool open)
+    // ── page switch: fade + slight rise
+    private void ShowPage(int index)
+    {
+        if (index == _shownPage || index < 0 || index >= _pages.Length) return;
+        var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
+        for (int i = 0; i < _pages.Length; i++)
+            if (i != index) _pages[i].Visibility = Visibility.Collapsed;
+
+        var page = _pages[index];
+        page.Visibility = Visibility.Visible;
+        page.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(380)));
+        ((TranslateTransform)page.RenderTransform).BeginAnimation(TranslateTransform.YProperty,
+            new DoubleAnimation(16, 0, TimeSpan.FromMilliseconds(460)) { EasingFunction = ease });
+        _shownPage = index;
+    }
+
+    // ── details drawer: scrim fades, panel slides from the right
+    private void AnimateDrawer(bool open)
     {
         var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
         if (open)
         {
-            DetailsHost.Opacity = 0;
-            DetailsHost.Visibility = Visibility.Visible;
-            DetailsHost.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)));
-            DShift.BeginAnimation(System.Windows.Media.TranslateTransform.YProperty,
-                new DoubleAnimation(26, 0, TimeSpan.FromMilliseconds(420)) { EasingFunction = ease });
-            DScale.BeginAnimation(System.Windows.Media.ScaleTransform.ScaleXProperty,
-                new DoubleAnimation(0.96, 1, TimeSpan.FromMilliseconds(420)) { EasingFunction = ease });
-            DScale.BeginAnimation(System.Windows.Media.ScaleTransform.ScaleYProperty,
-                new DoubleAnimation(0.96, 1, TimeSpan.FromMilliseconds(420)) { EasingFunction = ease });
+            DrawerHost.Opacity = 0;
+            DrawerHost.Visibility = Visibility.Visible;
+            DrawerHost.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)));
+            DrawerShift.BeginAnimation(TranslateTransform.XProperty,
+                new DoubleAnimation(DrawerPanel.Width, 0, TimeSpan.FromMilliseconds(460)) { EasingFunction = ease });
         }
         else
         {
-            var fade = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(160));
-            fade.Completed += (_, _) => { if (!_vm.HasDetails) DetailsHost.Visibility = Visibility.Collapsed; };
-            DetailsHost.BeginAnimation(OpacityProperty, fade);
+            DrawerShift.BeginAnimation(TranslateTransform.XProperty,
+                new DoubleAnimation(0, DrawerPanel.Width, TimeSpan.FromMilliseconds(260))
+                { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn } });
+            var fade = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(260));
+            fade.Completed += (_, _) => { if (!_vm.HasDetails) DrawerHost.Visibility = Visibility.Collapsed; };
+            DrawerHost.BeginAnimation(OpacityProperty, fade);
         }
     }
 
@@ -71,13 +99,12 @@ public partial class MainWindow : Window
     {
         var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
         ToastBox.BeginAnimation(OpacityProperty, new DoubleAnimation(on ? 1 : 0, TimeSpan.FromMilliseconds(260)));
-        ToastShift.BeginAnimation(System.Windows.Media.TranslateTransform.YProperty,
+        ToastShift.BeginAnimation(TranslateTransform.YProperty,
             new DoubleAnimation(on ? 0 : 16, TimeSpan.FromMilliseconds(340)) { EasingFunction = ease });
     }
 
-    private void OnOverlayDown(object sender, System.Windows.Input.MouseButtonEventArgs e) => _vm.Details = null;
-    private void OnCardDown(object sender, System.Windows.Input.MouseButtonEventArgs e) => e.Handled = true;
-    private void OnDetailsClose(object sender, RoutedEventArgs e) => _vm.Details = null;
+    private void OnScrimDown(object sender, System.Windows.Input.MouseButtonEventArgs e) => _vm.Details = null;
+    private void OnPanelDown(object sender, System.Windows.Input.MouseButtonEventArgs e) => e.Handled = true;
 
     // ── caption buttons
     private void OnMinimize(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;

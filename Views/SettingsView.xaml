@@ -1,0 +1,88 @@
+<UserControl x:Class="OneFlowHub.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="Panel" TargetType="Border">
+            <Setter Property="CornerRadius" Value="22"/>
+            <Setter Property="Background" Value="{StaticResource Surface}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,26"/>
+        </Style>
+        <Style x:Key="RowLine" TargetType="Border">
+            <Setter Property="Padding" Value="22,18"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel MaxWidth="760" HorizontalAlignment="Left" Margin="0,0,6,32">
+
+            <TextBlock Text="ზოგადი" Style="{StaticResource Overline}" Margin="6,0,0,10"/>
+            <Border Style="{StaticResource Panel}">
+                <StackPanel>
+                    <Border Style="{StaticResource RowLine}" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <StackPanel Margin="0,0,70,0">
+                                <TextBlock Text="დახურვა tray-ში" FontSize="15" FontWeight="SemiBold"/>
+                                <TextBlock Text="X-ზე დაჭერისას HUB არ გაითიშება და tray-ში დარჩება" Style="{StaticResource Hint}" Margin="0,3,0,0"/>
+                            </StackPanel>
+                            <CheckBox Style="{StaticResource Switch}" IsChecked="{Binding CloseToTray, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource RowLine}" BorderThickness="0">
+                        <Grid>
+                            <StackPanel Margin="0,0,70,0">
+                                <TextBlock Text="გაშვება Windows-თან ერთად" FontSize="15" FontWeight="SemiBold"/>
+                                <TextBlock Text="HUB ჩაირთვება კომპიუტერის ჩართვისას, ფანჯრის გარეშე" Style="{StaticResource Hint}" Margin="0,3,0,0"/>
+                            </StackPanel>
+                            <CheckBox Style="{StaticResource Switch}" IsChecked="{Binding StartWithWindows, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="განახლებები" Style="{StaticResource Overline}" Margin="6,0,0,10"/>
+            <Border Style="{StaticResource Panel}">
+                <StackPanel>
+                    <Border Style="{StaticResource RowLine}" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <StackPanel Margin="0,0,70,0">
+                                <TextBlock Text="შემოწმება გაშვებისას" FontSize="15" FontWeight="SemiBold"/>
+                                <TextBlock Text="HUB-ისა და პროგრამების ახალი ვერსიები ავტომატურად მოიძებნება" Style="{StaticResource Hint}" Margin="0,3,0,0"/>
+                            </StackPanel>
+                            <CheckBox Style="{StaticResource Switch}" IsChecked="{Binding CheckOnStart, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource RowLine}" BorderThickness="0">
+                        <Grid>
+                            <StackPanel Margin="0,0,170,0">
+                                <TextBlock Text="1Flow HUB" FontSize="15" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding HubVersion}" Style="{StaticResource Hint}" Margin="0,3,0,0"/>
+                            </StackPanel>
+                            <Button Style="{StaticResource Ghost}" Content="შემოწმება" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Command="{Binding CheckHubCommand}"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="მონაცემები" Style="{StaticResource Overline}" Margin="6,0,0,10"/>
+            <Border Style="{StaticResource Panel}">
+                <Border Style="{StaticResource RowLine}" BorderThickness="0">
+                    <Grid>
+                        <StackPanel Margin="0,0,150,0">
+                            <TextBlock Text="პროგრამების საქაღალდე" FontSize="15" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding DataFolder}" Style="{StaticResource Hint}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                        <Button Style="{StaticResource Ghost}" Content="გახსნა" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Command="{Binding OpenDataFolderCommand}"/>
+                    </Grid>
+                </Border>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
