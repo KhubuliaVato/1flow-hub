@@ -98,14 +98,14 @@ public sealed class AppVM : Bindable
         : "მიუწვდომელია";
 
     public Brush PrimaryBrush =>
-        _busy || Unavailable ? Frozen(new SolidColorBrush(Color.FromArgb(0x30, 255, 255, 255)))
-        : HasUpdate ? Frozen(new LinearGradientBrush(Color.FromRgb(0x5C, 0xE6, 0xA0), Color.FromRgb(0xA7, 0xF3, 0xD0), 0))
-        : IsInstalled ? Frozen(new LinearGradientBrush(Color.FromRgb(0x8F, 0xA2, 0xFF), Color.FromRgb(0xC9, 0xD1, 0xFF), 0))
-        : Frozen(new SolidColorBrush(Color.FromRgb(0xF3, 0xF4, 0xFF)));
+        _busy || Unavailable ? Frozen(new SolidColorBrush(Color.FromRgb(0x2B, 0x2B, 0x30)))
+        : IsInstalled && !HasUpdate ? Frozen(new SolidColorBrush(Color.FromRgb(0x2F, 0x2F, 0x35)))
+        : Frozen(new SolidColorBrush(Color.FromRgb(0x4F, 0x8E, 0xF7)));
 
     public Brush PrimaryForeground =>
-        _busy || Unavailable ? Frozen(new SolidColorBrush(Color.FromRgb(0xC9, 0xCD, 0xE6)))
-        : Frozen(new SolidColorBrush(Color.FromRgb(0x0A, 0x0D, 0x2A)));
+        _busy || Unavailable ? Frozen(new SolidColorBrush(Color.FromRgb(0x9C, 0x9C, 0xA6)))
+        : IsInstalled && !HasUpdate ? Frozen(new SolidColorBrush(Color.FromRgb(0xED, 0xED, 0xEF)))
+        : Frozen(new SolidColorBrush(Colors.White));
 
     private static Brush Frozen(Brush b) { b.Freeze(); return b; }
 
@@ -135,17 +135,13 @@ public sealed class AppVM : Bindable
         : Latest != null ? "ხელმისაწვდომია"
         : "მიუწვდომელია";
 
-    public Brush BadgeBackground =>
-        _busy ? Frozen(new SolidColorBrush(Color.FromArgb(0x40, 0x7C, 0x8C, 0xFF)))
-        : HasUpdate ? Frozen(new SolidColorBrush(Color.FromArgb(0x40, 0xFF, 0xC4, 0x6B)))
-        : IsInstalled ? Frozen(new SolidColorBrush(Color.FromArgb(0x38, 0x5C, 0xE6, 0xA0)))
-        : Frozen(new SolidColorBrush(Color.FromArgb(0x2A, 255, 255, 255)));
+    public Brush BadgeBackground => Frozen(new SolidColorBrush(Color.FromArgb(0x24, 255, 255, 255)));
 
     public Brush BadgeForeground =>
-        _busy ? Frozen(new SolidColorBrush(Color.FromRgb(0xC9, 0xD1, 0xFF)))
-        : HasUpdate ? Frozen(new SolidColorBrush(Color.FromRgb(0xFF, 0xD9, 0x9B)))
-        : IsInstalled ? Frozen(new SolidColorBrush(Color.FromRgb(0x9B, 0xF2, 0xC6)))
-        : Frozen(new SolidColorBrush(Color.FromRgb(0xC9, 0xCD, 0xE6)));
+        _busy ? Frozen(new SolidColorBrush(Color.FromRgb(0x7F, 0xB0, 0xFF)))
+        : HasUpdate ? Frozen(new SolidColorBrush(Color.FromRgb(0xD9, 0xA4, 0x41)))
+        : IsInstalled ? Frozen(new SolidColorBrush(Color.FromRgb(0x4C, 0xB9, 0x63)))
+        : Frozen(new SolidColorBrush(Color.FromRgb(0x9C, 0x9C, 0xA6)));
 
     public bool Matches(string q) =>
         string.IsNullOrWhiteSpace(q)

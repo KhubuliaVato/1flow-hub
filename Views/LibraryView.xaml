@@ -10,7 +10,7 @@
         </Grid.RowDefinitions>
 
         <!-- toolbar -->
-        <Grid Margin="0,0,0,20">
+        <Grid Margin="0,0,6,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -18,8 +18,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Border Background="#12FFFFFF" CornerRadius="14" BorderBrush="{StaticResource Line}" BorderThickness="1" Padding="3">
-                <StackPanel Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
+            <Border Style="{StaticResource Panel}" Padding="3" CornerRadius="7">
+                <StackPanel Orientation="Horizontal">
                     <RadioButton Style="{StaticResource Chip}" Content="ყველა" GroupName="flt" IsChecked="True"
                                  Command="{Binding FilterCommand}" CommandParameter="0"/>
                     <RadioButton Style="{StaticResource Chip}" Content="დაინსტალირებული" GroupName="flt"
@@ -29,7 +29,7 @@
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="2" Background="#12FFFFFF" CornerRadius="14" BorderBrush="{StaticResource Line}" BorderThickness="1" Padding="3" Margin="0,0,10,0">
+            <Border Grid.Column="2" Style="{StaticResource Panel}" Padding="3" CornerRadius="7" Margin="0,0,8,0">
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Style="{StaticResource ChipIcon}" Content="&#xE80A;" GroupName="vw" IsChecked="True" ToolTip="ბარათები"
                                  Command="{Binding ViewCommand}" CommandParameter="grid"/>
@@ -37,191 +37,97 @@
                                  Command="{Binding ViewCommand}" CommandParameter="list"/>
                 </StackPanel>
             </Border>
-            <Button Grid.Column="3" Style="{StaticResource IconBtn}" Content="&#xE72C;" Width="42" Height="42"
-                    Command="{Binding RefreshCommand}" ToolTip="განახლება"/>
+            <Button Grid.Column="3" Style="{StaticResource IconBtn}" Content="&#xE72C;" Command="{Binding RefreshCommand}" ToolTip="განახლება"/>
         </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Margin="0,0,6,28">
+            <StackPanel Margin="0,0,6,24">
 
-                <!-- empty state -->
-                <Border Visibility="{Binding NothingShown, Converter={StaticResource B2V}}" Padding="30" CornerRadius="22"
-                        BorderBrush="#33FFFFFF" BorderThickness="1" Background="#0CFFFFFF">
+                <Border Visibility="{Binding NothingShown, Converter={StaticResource B2V}}" Style="{StaticResource Panel}" Padding="28">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="&#xE721;" FontFamily="{StaticResource Icons}" FontSize="28" Foreground="{StaticResource Muted}" HorizontalAlignment="Center"/>
-                        <TextBlock Text="ვერაფერი მოიძებნა" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,10,0,4"/>
-                        <TextBlock Text="სცადე სხვა სიტყვა ან შეცვალე ფილტრი." Style="{StaticResource Hint}" HorizontalAlignment="Center"/>
-                        <Button Style="{StaticResource Ghost}" Content="ძებნის გასუფთავება" Margin="0,14,0,0" HorizontalAlignment="Center"
+                        <TextBlock Text="ვერაფერი მოიძებნა" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="სცადე სხვა სიტყვა ან შეცვალე ფილტრი." Style="{StaticResource Hint}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                        <Button Style="{StaticResource Ghost}" Content="ძებნის გასუფთავება" Margin="0,12,0,0" HorizontalAlignment="Center"
                                 Command="{Binding ClearSearchCommand}"/>
                     </StackPanel>
                 </Border>
 
-                <!-- ═════ grid ═════ -->
-                <ItemsControl ItemsSource="{Binding Library}" Visibility="{Binding ViewGrid, Converter={StaticResource B2V}}">
+                <!-- cards -->
+                <ItemsControl ItemsSource="{Binding Library}" ItemTemplate="{StaticResource AppCard}"
+                              Visibility="{Binding ViewGrid, Converter={StaticResource B2V}}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:AppVM}">
-                            <Border x:Name="Card" Width="300" Margin="0,0,18,18" CornerRadius="24" Cursor="Hand" ClipToBounds="True"
-                                    Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1"
-                                    RenderTransformOrigin="0.5,0.5">
-                                <Border.RenderTransform><TranslateTransform x:Name="Lift"/></Border.RenderTransform>
-                                <Border.InputBindings>
-                                    <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCommand}"/>
-                                </Border.InputBindings>
-                                <Border.Triggers>
-                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                        <BeginStoryboard><Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"/>
-                                        </Storyboard></BeginStoryboard>
-                                    </EventTrigger>
-                                    <EventTrigger RoutedEvent="UIElement.MouseEnter">
-                                        <BeginStoryboard><Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Lift" Storyboard.TargetProperty="Y" To="-4" Duration="0:0:0.22">
-                                                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                            <ColorAnimation Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#70FFFFFF" Duration="0:0:0.2"/>
-                                        </Storyboard></BeginStoryboard>
-                                    </EventTrigger>
-                                    <EventTrigger RoutedEvent="UIElement.MouseLeave">
-                                        <BeginStoryboard><Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Lift" Storyboard.TargetProperty="Y" To="0" Duration="0:0:0.28"/>
-                                            <ColorAnimation Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#26FFFFFF" Duration="0:0:0.28"/>
-                                        </Storyboard></BeginStoryboard>
-                                    </EventTrigger>
-                                </Border.Triggers>
-
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="112"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <!-- artwork -->
-                                    <Border>
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="{Binding AccentFrom}" Offset="0"/>
-                                                <GradientStop Color="{Binding AccentTo}" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                        <Grid>
-                                            <Border>
-                                                <Border.Background>
-                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                        <GradientStop Color="#00070816" Offset="0"/>
-                                                        <GradientStop Color="#99070816" Offset="1"/>
-                                                    </LinearGradientBrush>
-                                                </Border.Background>
-                                            </Border>
-                                            <Ellipse Width="170" Height="170" Fill="#16FFFFFF" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-70,-40,0"/>
-                                            <v:AppIconTile Width="58" Height="58" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="18,0,0,-18">
-                                                <v:AppIconTile.Effect>
-                                                    <DropShadowEffect BlurRadius="18" ShadowDepth="4" Opacity="0.45" Color="Black"/>
-                                                </v:AppIconTile.Effect>
-                                            </v:AppIconTile>
-                                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,14,0" Padding="10,4" CornerRadius="10"
-                                                    Background="#99070816">
-                                                <TextBlock Text="{Binding BadgeText}" FontSize="11.5" FontWeight="SemiBold" Foreground="{Binding BadgeForeground}"/>
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-
-                                    <!-- body -->
-                                    <StackPanel Grid.Row="1" Margin="18,28,18,18">
-                                        <TextBlock Text="{Binding Name}" FontSize="17" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Margin="0,3,0,0" Style="{StaticResource Hint}">
-                                            <Run Text="{Binding CategoryText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding VersionText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding SizeText, Mode=OneWay}"/>
-                                        </TextBlock>
-                                        <TextBlock Text="{Binding Description}" Margin="0,10,0,0" FontSize="13" LineHeight="19" Height="38"
-                                                   Foreground="{StaticResource Muted}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
-                                        <ProgressBar Style="{StaticResource Flow}" Value="{Binding Progress, Mode=OneWay}" Maximum="100" Margin="0,12,0,0"
-                                                     Visibility="{Binding IsBusy, Converter={StaticResource B2V}}"/>
-                                        <Grid Margin="0,14,0,0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Button Style="{StaticResource Pill}" Content="{Binding PrimaryText}" Padding="14,11"
-                                                    Background="{Binding PrimaryBrush}" Foreground="{Binding PrimaryForeground}"
-                                                    Command="{Binding PrimaryCommand}"/>
-                                            <Button Grid.Column="1" Style="{StaticResource IconBtn}" Content="&#xE946;" Width="42" Height="42" Margin="8,0,0,0"
-                                                    Command="{Binding OpenCommand}" ToolTip="დეტალები"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <!-- ═════ list ═════ -->
-                <StackPanel Visibility="{Binding ViewList, Converter={StaticResource B2V}}" Grid.IsSharedSizeScope="True">
-                    <Grid Margin="18,0,18,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="58"/>
-                            <ColumnDefinition Width="2.2*"/>
-                            <ColumnDefinition Width="1.1*"/>
-                            <ColumnDefinition Width="1.4*"/>
-                            <ColumnDefinition Width="0.8*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="150"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="1" Text="პროგრამა" Style="{StaticResource Overline}"/>
-                        <TextBlock Grid.Column="2" Text="ვერსია" Style="{StaticResource Overline}"/>
-                        <TextBlock Grid.Column="3" Text="სტატუსი" Style="{StaticResource Overline}"/>
-                        <TextBlock Grid.Column="4" Text="ზომა" Style="{StaticResource Overline}"/>
-                        <TextBlock Grid.Column="5" Text="გამოშვება" Style="{StaticResource Overline}"/>
-                    </Grid>
-                    <ItemsControl ItemsSource="{Binding Library}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type vm:AppVM}">
-                                <Border Margin="0,0,0,8" Padding="18,12" CornerRadius="16" Cursor="Hand"
-                                        Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
-                                    <Border.InputBindings>
-                                        <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCommand}"/>
-                                    </Border.InputBindings>
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="{StaticResource SurfaceHi}"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="58"/>
-                                            <ColumnDefinition Width="2.2*"/>
-                                            <ColumnDefinition Width="1.1*"/>
-                                            <ColumnDefinition Width="1.4*"/>
-                                            <ColumnDefinition Width="0.8*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="150"/>
-                                        </Grid.ColumnDefinitions>
-                                        <v:AppIconTile Width="42" Height="42" HorizontalAlignment="Left"/>
-                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,12,0">
-                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14.5" TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Text="{Binding CategoryText}" Style="{StaticResource Hint}" Margin="0,1,0,0"/>
-                                        </StackPanel>
-                                        <TextBlock Grid.Column="2" Text="{Binding VersionText}" VerticalAlignment="Center" FontSize="13" TextTrimming="CharacterEllipsis"/>
-                                        <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="10,4" CornerRadius="10"
-                                                Background="{Binding BadgeBackground}">
-                                            <TextBlock Text="{Binding BadgeText}" FontSize="11.5" FontWeight="SemiBold" Foreground="{Binding BadgeForeground}"/>
-                                        </Border>
-                                        <TextBlock Grid.Column="4" Text="{Binding SizeText}" VerticalAlignment="Center" FontSize="13" Foreground="{StaticResource Muted}"/>
-                                        <TextBlock Grid.Column="5" Text="{Binding UpdatedText}" VerticalAlignment="Center" FontSize="13" Foreground="{StaticResource Muted}"/>
-                                        <Button Grid.Column="6" Style="{StaticResource Pill}" Content="{Binding PrimaryText}" Padding="10,9" FontSize="13"
-                                                Background="{Binding PrimaryBrush}" Foreground="{Binding PrimaryForeground}"
-                                                Command="{Binding PrimaryCommand}"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
+                <!-- table -->
+                <Border Style="{StaticResource Panel}" Visibility="{Binding ViewList, Converter={StaticResource B2V}}">
+                    <StackPanel>
+                        <Grid Margin="16,10,16,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition Width="2.2*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="0.9*"/>
+                                <ColumnDefinition Width="1.1*"/>
+                                <ColumnDefinition Width="132"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="1" Text="პროგრამა" Style="{StaticResource Overline}"/>
+                            <TextBlock Grid.Column="2" Text="ვერსია" Style="{StaticResource Overline}"/>
+                            <TextBlock Grid.Column="3" Text="სტატუსი" Style="{StaticResource Overline}"/>
+                            <TextBlock Grid.Column="4" Text="ზომა" Style="{StaticResource Overline}"/>
+                            <TextBlock Grid.Column="5" Text="გამოშვება" Style="{StaticResource Overline}"/>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Library}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:AppVM}">
+                                    <Border Padding="16,10" Cursor="Hand" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0">
+                                        <Border.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCommand}"/>
+                                        </Border.InputBindings>
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#222226"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="48"/>
+                                                <ColumnDefinition Width="2.2*"/>
+                                                <ColumnDefinition Width="1.2*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                                <ColumnDefinition Width="0.9*"/>
+                                                <ColumnDefinition Width="1.1*"/>
+                                                <ColumnDefinition Width="132"/>
+                                            </Grid.ColumnDefinitions>
+                                            <v:AppIconTile Width="34" Height="34" HorizontalAlignment="Left"/>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                <TextBlock Text="{Binding Name}" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding CategoryText}" Style="{StaticResource Hint}" FontSize="11.5"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{Binding VersionText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Ellipse Width="6" Height="6" Fill="{Binding BadgeForeground}" Margin="0,1,7,0"/>
+                                                <TextBlock Text="{Binding BadgeText}" Foreground="{Binding BadgeForeground}" FontSize="12.5"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="4" Text="{Binding SizeText}" VerticalAlignment="Center" Foreground="{StaticResource Muted}"/>
+                                            <TextBlock Grid.Column="5" Text="{Binding UpdatedText}" VerticalAlignment="Center" Foreground="{StaticResource Muted}"/>
+                                            <Button Grid.Column="6" Style="{StaticResource Pill}" Content="{Binding PrimaryText}" Padding="10,6" FontSize="12.5"
+                                                    Background="{Binding PrimaryBrush}" Foreground="{Binding PrimaryForeground}"
+                                                    Command="{Binding PrimaryCommand}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </ScrollViewer>
     </Grid>

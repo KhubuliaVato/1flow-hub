@@ -5,13 +5,10 @@
              xmlns:vm="clr-namespace:OneFlowHub.ViewModels">
     <!-- DataContext = AppVM (MainVM.Details) -->
     <UserControl.Resources>
-        <Style x:Key="Stat" TargetType="Border">
-            <Setter Property="Padding" Value="14,12"/>
-            <Setter Property="CornerRadius" Value="14"/>
-            <Setter Property="Background" Value="#10FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,0,8,8"/>
+        <Style x:Key="Key" TargetType="TextBlock" BasedOn="{StaticResource Hint}"/>
+        <Style x:Key="Val" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
     </UserControl.Resources>
 
@@ -22,102 +19,82 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- artwork header -->
-        <Border Height="150" Panel.ZIndex="2" Margin="0,0,0,18">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="{Binding AccentFrom}" Offset="0"/>
-                    <GradientStop Color="{Binding AccentTo}" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.Background>
+        <!-- header -->
+        <Border Padding="22,18,16,16" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
             <Grid>
-                <Border>
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#00070816" Offset="0"/>
-                            <GradientStop Color="#EE0C0E2C" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                </Border>
-                <Ellipse Width="280" Height="280" Fill="#16FFFFFF" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-120,-80,0"/>
-                <v:AppIconTile Width="76" Height="76" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="28,0,0,-20">
-                    <v:AppIconTile.Effect>
-                        <DropShadowEffect BlurRadius="22" ShadowDepth="5" Opacity="0.5" Color="Black"/>
-                    </v:AppIconTile.Effect>
-                </v:AppIconTile>
-                <Button Style="{StaticResource IconBtn}" Content="&#xE8BB;" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Top"
-                        Margin="0,16,16,0" Background="#66000000" Click="OnClose"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <v:AppIconTile Width="52" Height="52"/>
+                <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Name}" FontSize="17" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <Ellipse Width="6" Height="6" Fill="{Binding BadgeForeground}" VerticalAlignment="Center" Margin="0,1,7,0"/>
+                        <TextBlock Text="{Binding BadgeText}" FontSize="12.5" Foreground="{Binding BadgeForeground}"/>
+                        <TextBlock Text="{Binding CategoryText}" Style="{StaticResource Hint}" Margin="10,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button Grid.Column="2" Style="{StaticResource IconBtn}" Content="&#xE8BB;" FontSize="11" VerticalAlignment="Top"
+                        Click="OnClose"/>
             </Grid>
         </Border>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Margin="28,0,28,12">
-                <TextBlock Text="{Binding Name}" FontSize="26" FontWeight="SemiBold" Margin="0,22,0,0" TextWrapping="Wrap"/>
-                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                    <Border Padding="10,4" CornerRadius="10" Background="{Binding BadgeBackground}">
-                        <TextBlock Text="{Binding BadgeText}" FontSize="12" FontWeight="SemiBold" Foreground="{Binding BadgeForeground}"/>
-                    </Border>
-                    <TextBlock Text="{Binding CategoryText}" Style="{StaticResource Hint}" VerticalAlignment="Center" Margin="12,0,0,0"/>
-                </StackPanel>
+            <StackPanel Margin="22,18,22,18">
+                <TextBlock Text="{Binding Description}" FontSize="13" LineHeight="20" Foreground="#C9C9D1" TextWrapping="Wrap"/>
 
-                <TextBlock Text="{Binding Description}" FontSize="14" LineHeight="22" Foreground="#CDD1EA" TextWrapping="Wrap" Margin="0,16,0,18"/>
-
-                <!-- progress -->
-                <StackPanel Visibility="{Binding IsBusy, Converter={StaticResource B2V}}" Margin="0,0,0,16">
+                <StackPanel Visibility="{Binding IsBusy, Converter={StaticResource B2V}}" Margin="0,16,0,0">
                     <TextBlock Text="{Binding StatusText}" Style="{StaticResource Hint}"/>
                     <ProgressBar Style="{StaticResource Flow}" Value="{Binding Progress, Mode=OneWay}" Maximum="100" Margin="0,8,0,0"/>
                 </StackPanel>
 
                 <!-- facts -->
-                <UniformGrid Columns="2">
-                    <Border Style="{StaticResource Stat}">
-                        <StackPanel>
-                            <TextBlock Text="დაინსტალირებული ვერსია" Style="{StaticResource Hint}" FontSize="11.5"/>
-                            <TextBlock Text="{Binding InstalledVersionText}" FontSize="16" FontWeight="SemiBold" Margin="0,3,0,0"/>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource Stat}">
-                        <StackPanel>
-                            <TextBlock Text="ბოლო ვერსია" Style="{StaticResource Hint}" FontSize="11.5"/>
-                            <TextBlock Text="{Binding LatestVersionText}" FontSize="16" FontWeight="SemiBold" Margin="0,3,0,0"/>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource Stat}">
-                        <StackPanel>
-                            <TextBlock Text="ზომა" Style="{StaticResource Hint}" FontSize="11.5"/>
-                            <TextBlock Text="{Binding SizeText}" FontSize="16" FontWeight="SemiBold" Margin="0,3,0,0"/>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource Stat}">
-                        <StackPanel>
-                            <TextBlock Text="გამოშვება" Style="{StaticResource Hint}" FontSize="11.5"/>
-                            <TextBlock FontSize="16" FontWeight="SemiBold" Margin="0,3,0,0">
-                                <Run Text="{Binding UpdatedText, Mode=OneWay}"/>
-                            </TextBlock>
-                        </StackPanel>
-                    </Border>
-                </UniformGrid>
+                <TextBlock Text="ინფორმაცია" Style="{StaticResource Overline}" Margin="0,22,0,8"/>
+                <Border Style="{StaticResource Panel}" Padding="16,4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="38"/><RowDefinition Height="38"/><RowDefinition Height="38"/><RowDefinition Height="38"/><RowDefinition Height="38"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="დაინსტალირებული ვერსია" Style="{StaticResource Key}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding InstalledVersionText}" Style="{StaticResource Val}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Text="ბოლო ვერსია" Style="{StaticResource Key}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LatestVersionText}" Style="{StaticResource Val}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Text="გამოშვების თარიღი" Style="{StaticResource Key}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding UpdatedText}" Style="{StaticResource Val}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="3" Text="ზომა" Style="{StaticResource Key}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SizeText}" Style="{StaticResource Val}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="4" Text="დაინსტალირებულია" Style="{StaticResource Key}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding InstalledText}" Style="{StaticResource Val}" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
 
-                <!-- release notes -->
-                <TextBlock Text="ცვლილებები" Style="{StaticResource H2}" Margin="0,22,0,12"/>
-                <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Margin="0,0,0,14">
+                <!-- changes -->
+                <TextBlock Text="ცვლილებები" Style="{StaticResource Overline}" Margin="0,24,0,10"/>
+                <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Margin="0,0,0,12">
                     <ItemsControl ItemsSource="{Binding Tabs}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:ReleaseTab}">
-                                <Button Margin="0,0,8,0" Content="{Binding Tag}"
+                                <Button Margin="0,0,6,0" Content="{Binding Tag}"
                                         Command="{Binding DataContext.SelectTabCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                         CommandParameter="{Binding}">
                                     <Button.Style>
                                         <Style TargetType="Button" BasedOn="{StaticResource Ghost}">
-                                            <Setter Property="Padding" Value="13,7"/>
-                                            <Setter Property="FontSize" Value="12.5"/>
+                                            <Setter Property="Padding" Value="11,5"/>
+                                            <Setter Property="FontSize" Value="12"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter Property="Background" Value="{StaticResource Text}"/>
-                                                    <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+                                                    <Setter Property="Background" Value="{StaticResource Accent}"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                                    <Setter Property="Foreground" Value="White"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -128,15 +105,14 @@
                     </ItemsControl>
                 </ScrollViewer>
 
-                <TextBlock Text="{Binding SelectedDate}" Style="{StaticResource Hint}" Margin="0,0,0,12"/>
+                <TextBlock Text="{Binding SelectedDate}" Style="{StaticResource Hint}" Margin="0,0,0,10"/>
                 <ItemsControl ItemsSource="{Binding SelectedNotes}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="0,0,0,10">
-                                <TextBlock Text="{Binding Text}" FontSize="14" FontWeight="SemiBold" Margin="0,10,0,0"
-                                           Foreground="{StaticResource Accent}" TextWrapping="Wrap"
-                                           Visibility="{Binding IsHeading, Converter={StaticResource B2V}}"/>
-                                <TextBlock Text="{Binding Text}" FontSize="14" LineHeight="22" Foreground="#DCDFF5" TextWrapping="Wrap"
+                            <Grid Margin="0,0,0,8">
+                                <TextBlock Text="{Binding Text}" FontSize="13" FontWeight="SemiBold" Margin="0,8,0,0"
+                                           TextWrapping="Wrap" Visibility="{Binding IsHeading, Converter={StaticResource B2V}}"/>
+                                <TextBlock Text="{Binding Text}" FontSize="12.5" LineHeight="19" Foreground="#C9C9D1" TextWrapping="Wrap"
                                            Visibility="{Binding IsText, Converter={StaticResource B2V}}"/>
                                 <Grid Visibility="{Binding IsBullet, Converter={StaticResource B2V}}">
                                     <Grid.ColumnDefinitions>
@@ -144,12 +120,12 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Ellipse Width="6" Height="6" Fill="{StaticResource Accent}" Margin="0,8,12,0" VerticalAlignment="Top"/>
+                                    <Ellipse Width="4" Height="4" Fill="{StaticResource Dim}" Margin="0,8,10,0" VerticalAlignment="Top"/>
                                     <Border Grid.Column="1" Visibility="{Binding HasTag, Converter={StaticResource B2V}}"
-                                            Margin="0,2,10,0" Padding="9,2" CornerRadius="9" Background="#26FFFFFF" VerticalAlignment="Top">
-                                        <TextBlock Text="{Binding Tag}" FontSize="11.5"/>
+                                            Margin="0,1,8,0" Padding="7,1" CornerRadius="4" Background="#2E2E34" VerticalAlignment="Top">
+                                        <TextBlock Text="{Binding Tag}" FontSize="11"/>
                                     </Border>
-                                    <TextBlock Grid.Column="2" Text="{Binding Text}" FontSize="14" LineHeight="22" Foreground="#DCDFF5" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Text}" FontSize="12.5" LineHeight="19" Foreground="#C9C9D1" TextWrapping="Wrap"/>
                                 </Grid>
                             </Grid>
                         </DataTemplate>
@@ -158,20 +134,20 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- sticky actions -->
-        <Border Grid.Row="2" Padding="28,16,28,20" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Background="#33000000">
+        <!-- actions -->
+        <Border Grid.Row="2" Padding="22,14" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Background="#161618">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource Pill}" Content="{Binding PrimaryText}" Padding="16,13"
+                <Button Style="{StaticResource Pill}" Content="{Binding PrimaryText}" Padding="14,10"
                         Background="{Binding PrimaryBrush}" Foreground="{Binding PrimaryForeground}"
                         Command="{Binding PrimaryCommand}"/>
-                <Button Grid.Column="1" Style="{StaticResource IconBtn}" Content="&#xE8B7;" Width="46" Height="46" Margin="10,0,0,0"
-                        Command="{Binding LocateCommand}" ToolTip="საქაღალდის გახსნა"/>
-                <Button Grid.Column="2" Style="{StaticResource Ghost}" Content="{Binding RemoveText}" Margin="10,0,0,0" Padding="14,12"
+                <Button Grid.Column="1" Style="{StaticResource Ghost}" Content="საქაღალდე" Margin="8,0,0,0" Padding="14,10"
+                        Command="{Binding LocateCommand}"/>
+                <Button Grid.Column="2" Style="{StaticResource Ghost}" Content="{Binding RemoveText}" Margin="8,0,0,0" Padding="14,10"
                         Command="{Binding RemoveCommand}"/>
             </Grid>
         </Border>

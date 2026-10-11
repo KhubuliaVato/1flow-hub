@@ -66,9 +66,9 @@ public partial class MainWindow : Window
 
         var page = _pages[index];
         page.Visibility = Visibility.Visible;
-        page.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(380)));
+        page.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)));
         ((TranslateTransform)page.RenderTransform).BeginAnimation(TranslateTransform.YProperty,
-            new DoubleAnimation(16, 0, TimeSpan.FromMilliseconds(460)) { EasingFunction = ease });
+            new DoubleAnimation(10, 0, TimeSpan.FromMilliseconds(280)) { EasingFunction = ease });
         _shownPage = index;
     }
 
@@ -82,7 +82,7 @@ public partial class MainWindow : Window
             DrawerHost.Visibility = Visibility.Visible;
             DrawerHost.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)));
             DrawerShift.BeginAnimation(TranslateTransform.XProperty,
-                new DoubleAnimation(DrawerPanel.Width, 0, TimeSpan.FromMilliseconds(460)) { EasingFunction = ease });
+                new DoubleAnimation(DrawerPanel.Width, 0, TimeSpan.FromMilliseconds(300)) { EasingFunction = ease });
         }
         else
         {

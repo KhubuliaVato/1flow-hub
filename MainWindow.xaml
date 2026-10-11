@@ -2,102 +2,43 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:OneFlowHub.Views"
-        Title="1Flow HUB" Width="1280" Height="820" MinWidth="1020" MinHeight="660"
+        Title="1Flow HUB" Width="1240" Height="800" MinWidth="1000" MinHeight="640"
         Icon="pack://application:,,,/assets/app.ico"
-        Background="Transparent" WindowStartupLocation="CenterScreen"
-        FontFamily="{StaticResource UI}" Foreground="{StaticResource Text}" UseLayoutRounding="True" SnapsToDevicePixels="True">
+        Background="{StaticResource Bg}" WindowStartupLocation="CenterScreen"
+        FontFamily="{StaticResource UI}" FontSize="13" Foreground="{StaticResource Text}"
+        UseLayoutRounding="True" SnapsToDevicePixels="True">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="64" ResizeBorderThickness="6" GlassFrameThickness="-1"
+        <WindowChrome CaptionHeight="52" ResizeBorderThickness="6" GlassFrameThickness="-1"
                       CornerRadius="0" UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
 
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-            <BeginStoryboard>
-                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
-                    <DoubleAnimation Storyboard.TargetName="T1" Storyboard.TargetProperty="X" From="0" To="260" Duration="0:0:19">
-                        <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation Storyboard.TargetName="T1" Storyboard.TargetProperty="Y" From="0" To="180" Duration="0:0:23">
-                        <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation Storyboard.TargetName="T2" Storyboard.TargetProperty="X" From="0" To="-300" Duration="0:0:25">
-                        <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation Storyboard.TargetName="T2" Storyboard.TargetProperty="Y" From="0" To="200" Duration="0:0:21">
-                        <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation Storyboard.TargetName="T3" Storyboard.TargetProperty="X" From="0" To="240" Duration="0:0:27">
-                        <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation Storyboard.TargetName="T3" Storyboard.TargetProperty="Y" From="0" To="-160" Duration="0:0:24">
-                        <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </Window.Triggers>
-
-    <Grid x:Name="Root">
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#F00A0D2A" Offset="0"/>
-                <GradientStop Color="#F4070816" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-
-        <!-- slow aurora -->
-        <Canvas IsHitTestVisible="False" ClipToBounds="True">
-            <Ellipse Width="820" Height="820" Canvas.Left="-260" Canvas.Top="-320">
-                <Ellipse.Fill>
-                    <RadialGradientBrush><GradientStop Color="#604F6BFF" Offset="0"/><GradientStop Color="#00000000" Offset="1"/></RadialGradientBrush>
-                </Ellipse.Fill>
-                <Ellipse.RenderTransform><TranslateTransform x:Name="T1"/></Ellipse.RenderTransform>
-            </Ellipse>
-            <Ellipse Width="760" Height="760" Canvas.Right="-240" Canvas.Top="60">
-                <Ellipse.Fill>
-                    <RadialGradientBrush><GradientStop Color="#4022D3EE" Offset="0"/><GradientStop Color="#00000000" Offset="1"/></RadialGradientBrush>
-                </Ellipse.Fill>
-                <Ellipse.RenderTransform><TranslateTransform x:Name="T2"/></Ellipse.RenderTransform>
-            </Ellipse>
-            <Ellipse Width="700" Height="700" Canvas.Left="320" Canvas.Bottom="-380">
-                <Ellipse.Fill>
-                    <RadialGradientBrush><GradientStop Color="#40EC4899" Offset="0"/><GradientStop Color="#00000000" Offset="1"/></RadialGradientBrush>
-                </Ellipse.Fill>
-                <Ellipse.RenderTransform><TranslateTransform x:Name="T3"/></Ellipse.RenderTransform>
-            </Ellipse>
-        </Canvas>
-
+    <Grid x:Name="Root" Background="{StaticResource Bg}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="248"/>
+                <ColumnDefinition Width="228"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- ═════════════ sidebar ═════════════ -->
-            <Border Background="#0DFFFFFF" BorderBrush="{StaticResource Line}" BorderThickness="0,0,1,0">
-                <Grid Margin="18,0,18,18">
+            <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,1,0">
+                <Grid Margin="12,0,12,12">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="52"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,0,0">
-                        <Border Width="36" Height="36" CornerRadius="12" Background="{StaticResource AccentGradient}">
-                            <TextBlock Text="1" FontSize="21" FontWeight="SemiBold" Foreground="{StaticResource Ink}"
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                        <Border Width="26" Height="26" CornerRadius="6" Background="{StaticResource Accent}">
+                            <TextBlock Text="1" FontSize="15" FontWeight="Bold" Foreground="White"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
-                        <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="1Flow" FontSize="18" FontWeight="SemiBold" LineHeight="20"/>
-                            <TextBlock Text="HUB" FontSize="10.5" Foreground="{StaticResource Muted}" Margin="0,-1,0,0"/>
-                        </StackPanel>
+                        <TextBlock Text="1Flow HUB" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,0,0"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1" Margin="0,14,0,0" WindowChrome.IsHitTestVisibleInChrome="True">
-                        <TextBlock Text="მენიუ" Style="{StaticResource Overline}" Margin="14,0,0,8"/>
-                        <RadioButton Style="{StaticResource Nav}" Tag="&#xE80F;" Content="მთავარი" GroupName="nav"
+                    <StackPanel Grid.Row="1" Margin="0,10,0,0" WindowChrome.IsHitTestVisibleInChrome="True">
+                        <RadioButton Style="{StaticResource Nav}" Tag="&#xE80F;" Content="მიმოხილვა" GroupName="nav"
                                      IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding PageCommand}" CommandParameter="0"/>
                         <RadioButton Style="{StaticResource Nav}" Tag="&#xE71D;" Content="აპლიკაციები" GroupName="nav"
                                      IsChecked="{Binding IsLibrary, Mode=OneWay}" Command="{Binding PageCommand}" CommandParameter="1"/>
@@ -105,61 +46,33 @@
                             <RadioButton Style="{StaticResource Nav}" Tag="&#xE895;" Content="განახლებები" GroupName="nav"
                                          IsChecked="{Binding IsUpdates, Mode=OneWay}" Command="{Binding PageCommand}" CommandParameter="2"/>
                             <Border Visibility="{Binding HasUpdates, Converter={StaticResource B2V}}" HorizontalAlignment="Right"
-                                    VerticalAlignment="Center" Margin="0,-4,14,0" MinWidth="22" Height="22" CornerRadius="11"
-                                    Background="#FFC46B" IsHitTestVisible="False">
-                                <TextBlock Text="{Binding UpdateCount}" FontSize="12" FontWeight="Bold" Foreground="#2A1B00"
+                                    VerticalAlignment="Center" Margin="0,-2,12,0" MinWidth="20" Height="18" CornerRadius="9"
+                                    Background="{StaticResource Warn}" IsHitTestVisible="False">
+                                <TextBlock Text="{Binding UpdateCount}" FontSize="11" FontWeight="Bold" Foreground="#1B1400"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6,0"/>
                             </Border>
                         </Grid>
 
-                        <TextBlock Text="სისტემა" Style="{StaticResource Overline}" Margin="14,20,0,8"/>
+                        <Border Height="1" Background="{StaticResource Line}" Margin="8,12,8,12"/>
                         <RadioButton Style="{StaticResource Nav}" Tag="&#xE713;" Content="პარამეტრები" GroupName="nav"
                                      IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding PageCommand}" CommandParameter="3"/>
                     </StackPanel>
 
-                    <!-- status card -->
                     <StackPanel Grid.Row="2">
-                        <Border Visibility="{Binding HasHubUpdate, Converter={StaticResource B2V}}" Margin="0,0,0,12" Padding="14"
-                                CornerRadius="16" Background="#1F5CE6A0" BorderBrush="#555CE6A0" BorderThickness="1">
+                        <Border Visibility="{Binding HasHubUpdate, Converter={StaticResource B2V}}" Margin="0,0,0,10" Padding="12"
+                                Style="{StaticResource Panel}" BorderBrush="{StaticResource Accent}">
                             <StackPanel>
-                                <TextBlock Text="{Binding HubUpdateText}" FontSize="13" FontWeight="SemiBold" Foreground="#A7F3D0"/>
-                                <TextBlock Text="HUB-ს ახალი ვერსია აქვს" Style="{StaticResource Hint}" Margin="0,2,0,10"/>
-                                <ProgressBar Style="{StaticResource Flow}" Value="{Binding HubProgress, Mode=OneWay}" Maximum="100" Margin="0,0,0,10"
+                                <TextBlock Text="{Binding HubUpdateText}" FontSize="12.5" FontWeight="SemiBold"/>
+                                <TextBlock Text="ხელმისაწვდომია ახალი ვერსია" Style="{StaticResource Hint}" FontSize="11.5" Margin="0,2,0,8"/>
+                                <ProgressBar Style="{StaticResource Flow}" Value="{Binding HubProgress, Mode=OneWay}" Maximum="100" Margin="0,0,0,8"
                                              Visibility="{Binding HubBusy, Converter={StaticResource B2V}}"/>
-                                <Button Style="{StaticResource Pill}" Content="განახლება" Padding="10,8" FontSize="13"
-                                        Background="#5CE6A0" Command="{Binding HubUpdateCommand}"/>
+                                <Button Style="{StaticResource Pill}" Content="განახლება" Padding="10,6" FontSize="12.5"
+                                        Command="{Binding HubUpdateCommand}"/>
                             </StackPanel>
                         </Border>
-
-                        <Border Padding="14,13" CornerRadius="16" Background="#10FFFFFF" BorderBrush="{StaticResource Line}" BorderThickness="1">
-                            <StackPanel>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Ellipse Width="8" Height="8" VerticalAlignment="Center" Margin="0,1,9,0">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="#5CE6A0"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HasUpdates}" Value="True">
-                                                        <Setter Property="Fill" Value="#FFC46B"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-                                    <TextBlock Grid.Column="1" Text="{Binding SidebarUpdateText}" FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap"/>
-                                </Grid>
-                                <Button Style="{StaticResource Ghost}" Content="ყველას განახლება" Margin="0,10,0,0" Padding="10,8" FontSize="12.5"
-                                        Command="{Binding UpdateAllCommand}"
-                                        Visibility="{Binding HasUpdates, Converter={StaticResource B2V}}"/>
-                                <TextBlock Margin="0,8,0,0" Style="{StaticResource Hint}" FontSize="11.5">
-                                    <Run Text="1Flow HUB "/><Run Text="{Binding HubVersion, Mode=OneWay}"/>
-                                </TextBlock>
-                            </StackPanel>
-                        </Border>
+                        <TextBlock Margin="8,0,0,2" Style="{StaticResource Hint}" FontSize="11.5">
+                            <Run Text="ვერსია "/><Run Text="{Binding HubVersion, Mode=OneWay}"/>
+                        </TextBlock>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -167,31 +80,30 @@
             <!-- ═════════════ main column ═════════════ -->
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="52"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="28"/>
                 </Grid.RowDefinitions>
 
                 <!-- top bar -->
-                <Grid Margin="40,0,170,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel VerticalAlignment="Center" Margin="0,0,28,0">
-                        <TextBlock Text="{Binding PageTitle}" FontSize="20" FontWeight="SemiBold"/>
-                    </StackPanel>
-                    <Grid Grid.Column="1" MaxWidth="420" HorizontalAlignment="Left" VerticalAlignment="Center"
-                          WindowChrome.IsHitTestVisibleInChrome="True">
-                        <TextBox Style="{StaticResource Search}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button Style="{StaticResource IconBtn}" Content="&#xE894;" Width="28" Height="28" FontSize="10" HorizontalAlignment="Right"
-                                Margin="0,0,8,0" Background="Transparent" Command="{Binding ClearSearchCommand}"
-                                Visibility="{Binding HasSearch, Converter={StaticResource B2V}}"/>
+                <Border BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+                    <Grid Margin="28,0,160,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding PageTitle}" Style="{StaticResource H1}" VerticalAlignment="Center"/>
+                        <Grid Grid.Column="1" Width="300" VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True">
+                            <TextBox Style="{StaticResource Search}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Style="{StaticResource IconBtn}" Content="&#xE894;" Width="26" Height="26" FontSize="9" HorizontalAlignment="Right"
+                                    Margin="0,0,4,0" Command="{Binding ClearSearchCommand}"
+                                    Visibility="{Binding HasSearch, Converter={StaticResource B2V}}"/>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Border>
 
                 <!-- pages -->
-                <Grid Grid.Row="1" Margin="40,6,34,0">
+                <Grid Grid.Row="1" Margin="28,22,22,0">
                     <v:HomeView x:Name="HomePage" Visibility="Visible"/>
                     <v:LibraryView x:Name="LibraryPage" Visibility="Collapsed"/>
                     <v:UpdatesView x:Name="UpdatesPage" Visibility="Collapsed"/>
@@ -199,23 +111,23 @@
                 </Grid>
 
                 <!-- status bar -->
-                <Border Grid.Row="2" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Background="#14000000">
-                    <Grid Margin="40,0,34,0">
+                <Border Grid.Row="2" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Background="{StaticResource Side}">
+                    <Grid Margin="28,0,22,0">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Ellipse Width="7" Height="7" Margin="0,0,8,0">
+                            <Ellipse Width="6" Height="6" Margin="0,0,7,0">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
-                                        <Setter Property="Fill" Value="#5CE6A0"/>
+                                        <Setter Property="Fill" Value="{StaticResource Ok}"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsOnline}" Value="False">
-                                                <Setter Property="Fill" Value="#FF7A85"/>
+                                                <Setter Property="Fill" Value="{StaticResource Danger}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Ellipse.Style>
                             </Ellipse>
                             <TextBlock Text="{Binding ConnectionText}" Style="{StaticResource Hint}" FontSize="11.5"/>
-                            <TextBlock Text="{Binding SyncText}" Style="{StaticResource Hint}" FontSize="11.5" Margin="18,0,0,0"/>
+                            <TextBlock Text="{Binding SyncText}" Style="{StaticResource Hint}" FontSize="11.5" Margin="16,0,0,0"/>
                         </StackPanel>
                         <TextBlock Text="{Binding StatusLine}" Style="{StaticResource Hint}" FontSize="11.5"
                                    HorizontalAlignment="Right" VerticalAlignment="Center"/>
@@ -233,31 +145,20 @@
         </Grid>
 
         <!-- ═════════════ details drawer ═════════════ -->
-        <Grid x:Name="DrawerHost" Visibility="Collapsed" MouseLeftButtonDown="OnScrimDown">
-            <Grid.Background>
-                <SolidColorBrush Color="#99050716"/>
-            </Grid.Background>
-            <Border x:Name="DrawerPanel" Width="520" HorizontalAlignment="Right" MouseLeftButtonDown="OnPanelDown"
-                    BorderBrush="#33FFFFFF" BorderThickness="1,0,0,0" ClipToBounds="True">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#FF14183F" Offset="0"/>
-                        <GradientStop Color="#FF0A0C26" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-                <Border.RenderTransform><TranslateTransform x:Name="DrawerShift" X="520"/></Border.RenderTransform>
-                <Border.Effect>
-                    <DropShadowEffect BlurRadius="50" ShadowDepth="0" Opacity="0.55" Color="Black"/>
-                </Border.Effect>
+        <Grid x:Name="DrawerHost" Visibility="Collapsed" Background="#99000000" MouseLeftButtonDown="OnScrimDown">
+            <Border x:Name="DrawerPanel" Width="480" HorizontalAlignment="Right" MouseLeftButtonDown="OnPanelDown"
+                    Background="#1A1A1D" BorderBrush="{StaticResource Line}" BorderThickness="1,0,0,0">
+                <Border.RenderTransform><TranslateTransform x:Name="DrawerShift" X="480"/></Border.RenderTransform>
                 <v:DetailsDrawer DataContext="{Binding Details}"/>
             </Border>
         </Grid>
 
         <!-- ═════════════ toast ═════════════ -->
-        <Border x:Name="ToastBox" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,52" Padding="22,13"
-                CornerRadius="16" Background="#F0161A44" BorderBrush="#40FFFFFF" BorderThickness="1" Opacity="0" IsHitTestVisible="False">
-            <Border.RenderTransform><TranslateTransform x:Name="ToastShift" Y="20"/></Border.RenderTransform>
-            <TextBlock Text="{Binding ToastText}" FontSize="14"/>
+        <Border x:Name="ToastBox" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,44" Padding="16,10"
+                CornerRadius="6" Background="#2C2C32" BorderBrush="{StaticResource LineHi}" BorderThickness="1"
+                Opacity="0" IsHitTestVisible="False">
+            <Border.RenderTransform><TranslateTransform x:Name="ToastShift" Y="12"/></Border.RenderTransform>
+            <TextBlock Text="{Binding ToastText}" FontSize="13"/>
         </Border>
     </Grid>
 </Window>

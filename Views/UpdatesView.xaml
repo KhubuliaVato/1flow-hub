@@ -4,85 +4,72 @@
              xmlns:v="clr-namespace:OneFlowHub.Views"
              xmlns:vm="clr-namespace:OneFlowHub.ViewModels">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="0,0,6,32">
+        <StackPanel Margin="0,0,6,28">
 
-            <!-- pending updates -->
-            <Grid Margin="0,0,0,14">
-                <TextBlock Text="ხელმისაწვდომი განახლებები" Style="{StaticResource H2}" VerticalAlignment="Center"/>
-                <Button Style="{StaticResource Pill}" Content="ყველას განახლება" HorizontalAlignment="Right" Padding="16,9" FontSize="13"
-                        Background="#5CE6A0" Command="{Binding UpdateAllCommand}"
-                        Visibility="{Binding HasUpdates, Converter={StaticResource B2V}}"/>
+            <!-- available -->
+            <Grid Margin="0,0,0,12">
+                <TextBlock Text="ხელმისაწვდომი" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                <Button Style="{StaticResource Pill}" Content="ყველას განახლება" HorizontalAlignment="Right" Padding="14,6"
+                        Command="{Binding UpdateAllCommand}" Visibility="{Binding HasUpdates, Converter={StaticResource B2V}}"/>
             </Grid>
 
-            <Border Visibility="{Binding NoUpdates, Converter={StaticResource B2V}}" Padding="24,20" CornerRadius="22"
-                    Background="#165CE6A0" BorderBrush="#445CE6A0" BorderThickness="1">
+            <Border Visibility="{Binding NoUpdates, Converter={StaticResource B2V}}" Style="{StaticResource Panel}" Padding="18,14">
                 <StackPanel Orientation="Horizontal">
-                    <Border Width="42" Height="42" CornerRadius="21" Background="#335CE6A0">
-                        <TextBlock Text="&#xE73E;" FontFamily="{StaticResource Icons}" FontSize="16" Foreground="#9BF2C6"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="ყველაფერი განახლებულია" FontSize="15" FontWeight="SemiBold"/>
-                        <TextBlock Text="შენ გაქვს ყველა პროგრამის ბოლო ვერსია." Style="{StaticResource Hint}" Margin="0,2,0,0"/>
-                    </StackPanel>
+                    <Ellipse Width="8" Height="8" Fill="{StaticResource Ok}" Margin="0,0,10,0"/>
+                    <TextBlock Text="ყველა პროგრამა განახლებულია" FontWeight="Medium"/>
                 </StackPanel>
             </Border>
 
-            <ItemsControl ItemsSource="{Binding Pending}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:AppVM}">
-                        <Border Margin="0,0,0,10" Padding="18,14" CornerRadius="18" Background="{StaticResource Surface}"
-                                BorderBrush="#55FFC46B" BorderThickness="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <v:AppIconTile Width="44" Height="44"/>
-                                <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14.5"/>
-                                    <TextBlock Style="{StaticResource Hint}" Margin="0,2,0,0">
-                                        <Run Text="{Binding VersionText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding SizeText, Mode=OneWay}"/>
-                                    </TextBlock>
-                                </StackPanel>
-                                <Button Grid.Column="2" Style="{StaticResource Ghost}" Content="ცვლილებები" Margin="0,0,10,0" Command="{Binding OpenCommand}"/>
-                                <Button Grid.Column="3" Style="{StaticResource Pill}" Content="{Binding PrimaryText}" MinWidth="140"
-                                        Background="{Binding PrimaryBrush}" Foreground="{Binding PrimaryForeground}" Command="{Binding PrimaryCommand}"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Border Style="{StaticResource Panel}" Visibility="{Binding HasUpdates, Converter={StaticResource B2V}}">
+                <ItemsControl ItemsSource="{Binding Pending}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:AppVM}">
+                            <Border Padding="16,12" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <v:AppIconTile Width="36" Height="36"/>
+                                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Medium"/>
+                                        <TextBlock Style="{StaticResource Hint}" Margin="0,2,0,0">
+                                            <Run Text="{Binding VersionText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding SizeText, Mode=OneWay}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <Button Grid.Column="2" Style="{StaticResource Ghost}" Content="ცვლილებები" Margin="0,0,8,0" Padding="12,6"
+                                            Command="{Binding OpenCommand}"/>
+                                    <Button Grid.Column="3" Style="{StaticResource Pill}" Content="{Binding PrimaryText}" MinWidth="118" Padding="12,6"
+                                            Background="{Binding PrimaryBrush}" Foreground="{Binding PrimaryForeground}"
+                                            Command="{Binding PrimaryCommand}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
 
             <!-- history -->
-            <TextBlock Text="ისტორია" Style="{StaticResource H2}" Margin="0,30,0,14"/>
-
-            <TextBlock Text="ისტორია ჯერ არ ჩანს. შეამოწმე ინტერნეტი და დააჭირე განახლებას." Style="{StaticResource Hint}" FontSize="14">
-                <TextBlock.Visibility>
-                    <Binding Path="HasFeed">
-                        <Binding.Converter>
-                            <!-- shown only when the feed is empty -->
-                            <v:InvertBoolToVisibility/>
-                        </Binding.Converter>
-                    </Binding>
-                </TextBlock.Visibility>
-            </TextBlock>
+            <TextBlock Text="ისტორია" Style="{StaticResource H2}" Margin="0,26,0,12"/>
+            <TextBlock Text="ისტორია ჯერ არ ჩანს. შეამოწმე ინტერნეტი და განაახლე სია." Style="{StaticResource Hint}"
+                       Visibility="{Binding HasFeed, Converter={StaticResource NotB2V}}"/>
 
             <ItemsControl ItemsSource="{Binding Feed}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:FeedItem}">
-                        <Border Margin="0,0,0,12" Padding="20,18" CornerRadius="20" Background="{StaticResource Surface}"
-                                BorderBrush="{StaticResource Line}" BorderThickness="1" Cursor="Hand">
+                        <Border Margin="0,0,0,10" Padding="16,14" Cursor="Hand" CornerRadius="8" BorderThickness="1">
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCommand}"/>
                             </Border.InputBindings>
                             <Border.Style>
                                 <Style TargetType="Border">
+                                    <Setter Property="Background" Value="{StaticResource Surface}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource SurfaceHi}"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource LineHi}"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -92,26 +79,26 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <v:AppIconTile Width="44" Height="44" VerticalAlignment="Top" DataContext="{Binding App}"/>
-                                <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                                <v:AppIconTile Width="36" Height="36" VerticalAlignment="Top" DataContext="{Binding App}"/>
+                                <StackPanel Grid.Column="1" Margin="12,0,0,0">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding AppName}" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                        <Border Margin="10,0,0,0" Padding="9,2" CornerRadius="9" Background="#26FFFFFF" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Tag}" FontSize="12"/>
+                                        <TextBlock Text="{Binding AppName}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <Border Margin="8,0,0,0" Padding="7,1" CornerRadius="4" Background="#2E2E34" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Tag}" FontSize="11.5"/>
                                         </Border>
+                                        <TextBlock Text="{Binding DateText}" Style="{StaticResource Hint}" Margin="12,0,0,0" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBlock Text="{Binding DateText}" Style="{StaticResource Hint}" Margin="0,3,0,10"/>
-                                    <ItemsControl ItemsSource="{Binding Lines}">
+                                    <ItemsControl ItemsSource="{Binding Lines}" Margin="0,8,0,0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid Margin="0,0,0,6">
+                                                <Grid Margin="0,0,0,5">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Ellipse Width="5" Height="5" Fill="{StaticResource Accent}" Margin="0,8,10,0" VerticalAlignment="Top"/>
-                                                    <TextBlock Grid.Column="1" Text="{Binding Text}" FontSize="13.5" LineHeight="20" Foreground="#DCDFF5"
-                                                               TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="40"/>
+                                                    <Ellipse Width="4" Height="4" Fill="{StaticResource Dim}" Margin="0,8,9,0" VerticalAlignment="Top"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Text}" FontSize="12.5" LineHeight="19" Foreground="#C9C9D1"
+                                                               TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="38"/>
                                                 </Grid>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>

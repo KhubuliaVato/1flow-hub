@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
@@ -97,7 +97,7 @@ public sealed class MainVM : Bindable
     public bool IsLibrary => Page == 1;
     public bool IsUpdates => Page == 2;
     public bool IsSettings => Page == 3;
-    public string PageTitle => Page switch { 0 => "მთავარი", 1 => "აპლიკაციები", 2 => "განახლებები", _ => "პარამეტრები" };
+    public string PageTitle => Page switch { 0 => "მიმოხილვა", 1 => "აპლიკაციები", 2 => "განახლებები", _ => "პარამეტრები" };
 
     public bool IsLoading { get => _loading; private set { if (Set(ref _loading, value)) Raise(nameof(StatusLine)); } }
     public AppVM? Details { get => _details; set { if (Set(ref _details, value)) Raise(nameof(HasDetails)); } }
@@ -315,3 +315,4 @@ public sealed class MainVM : Bindable
         }
     }
 }
+
