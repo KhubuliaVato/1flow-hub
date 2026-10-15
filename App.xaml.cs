@@ -34,6 +34,9 @@ public partial class App : Application
         TaskScheduler.UnobservedTaskException += (_, args) => { Log.Error(args.Exception); args.SetObserved(); };
 
         var settings = AppSettings.Load();
+        // dev switch: --catalog=<local file or url> (not saved)
+        var catArg = e.Args.FirstOrDefault(a => a.StartsWith("--catalog="));
+        if (catArg != null) settings.CatalogUrl = catArg[10..];
         _vm = new MainVM(settings);
         _window = new MainWindow(_vm);
 

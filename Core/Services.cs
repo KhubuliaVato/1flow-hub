@@ -169,6 +169,8 @@ public sealed class CatalogEntry
     public string? AssetMatch { get; set; }
     public string? ExecutableName { get; set; }
     public string? Category { get; set; }
+    /// <summary>"ready" (default) | "beta" (test mode) | "soon" (not released yet, download disabled)</summary>
+    public string? Status { get; set; }
 }
 
 public static class Catalog
@@ -178,7 +180,7 @@ public static class Catalog
         var cachePath = Path.Combine(Paths.Cache, "catalog.json");
         try
         {
-            var text = await GitHub.Http.GetStringAsync(url);
+            var text = File.Exists(url) ? await File.ReadAllTextAsync(url) : await GitHub.Http.GetStringAsync(url);
             var list = JsonSerializer.Deserialize<List<CatalogEntry>>(text, Json.Options);
             if (list is { Count: > 0 })
             {

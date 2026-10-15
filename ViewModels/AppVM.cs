@@ -51,6 +51,22 @@ public sealed class AppVM : Bindable
 
     // ── identity
     public string Id => Entry.Id;
+
+    // ── release stage (comes from the catalog)
+    public bool IsSoon => string.Equals(Entry.Status, "soon", StringComparison.OrdinalIgnoreCase);
+    public bool IsBeta => string.Equals(Entry.Status, "beta", StringComparison.OrdinalIgnoreCase);
+    public bool IsReady => !IsSoon && !IsBeta;
+    public string StageText => IsSoon ? "მალე დარელიზდება" : IsBeta ? "სატესტო რეჟიმში" : "გამოყენებისთვის მზა";
+    public Brush StageBrush => Frozen(new SolidColorBrush(IsSoon ? Color.FromRgb(0x7F, 0xB0, 0xFF)
+                                                          : IsBeta ? Color.FromRgb(0xD9, 0xA4, 0x41)
+                                                          : Color.FromRgb(0x4C, 0xB9, 0x63)));
+    public Brush StageBackground => Frozen(new SolidColorBrush(IsSoon ? Color.FromArgb(0x26, 0x7F, 0xB0, 0xFF)
+                                                               : IsBeta ? Color.FromArgb(0x26, 0xD9, 0xA4, 0x41)
+                                                               : Color.FromArgb(0x24, 0x4C, 0xB9, 0x63)));
+    public string StageNote => IsSoon ? "ეს პროგრამა მალე დარელიზდება. ჩამოტვირთვა ჯერ გამორთულია."
+                               : IsBeta ? "პროგრამა სატესტო რეჟიმშია — შესაძლოა ხარვეზები გამოჩნდეს. რჩევას ან შეცდომებს გვატყობინე."
+                               : "";
+    public bool HasStageNote => IsSoon || IsBeta;
     public string Name => Entry.Name;
     public string Description => Entry.Description;
     public string Glyph => string.IsNullOrWhiteSpace(Entry.IconText) ? Name[..1].ToUpperInvariant() : Entry.IconText!;
@@ -79,12 +95,14 @@ public sealed class AppVM : Bindable
     public bool CanUpdate => HasUpdate && !IsBusy;
 
     public string VersionText =>
-        IsInstalled ? (HasUpdate ? $"v{VersionUtil.Clean(_installedTag)} → v{Latest!.Version}" : $"v{VersionUtil.Clean(_installedTag)}")
+        IsSoon && !IsInstalled ? "ჯერ არ გამოსულა"
+        : IsInstalled ? (HasUpdate ? $"v{VersionUtil.Clean(_installedTag)} → v{Latest!.Version}" : $"v{VersionUtil.Clean(_installedTag)}")
         : Latest != null ? $"v{Latest.Version}" : "—";
 
     public string StatusText =>
         _busy ? BusyText
         : _loading ? "იტვირთება…"
+        : IsSoon && !IsInstalled ? "ჯერ არ არის ხელმისაწვდომი"
         : HasUpdate ? "ახალი ვერსია ხელმისაწვდომია"
         : IsInstalled ? "დაინსტალირებულია · განახლებულია"
         : Latest != null ? "არ არის დაინსტალირებული"
@@ -92,6 +110,7 @@ public sealed class AppVM : Bindable
 
     public string PrimaryText =>
         _busy ? "მიმდინარეობს…"
+        : IsSoon && !IsInstalled ? "მალე"
         : HasUpdate ? "განახლება"
         : IsInstalled ? "გახსნა"
         : Latest != null ? "დაინსტალირება"
@@ -117,7 +136,7 @@ public sealed class AppVM : Bindable
         get
         {
             var a = Latest == null ? null : Installer.PickAsset(Latest, Entry.AssetMatch);
-            return a == null ? "—" : Ka.Size(a.Size);
+            return a == null ? (IsSoon ? "" : "—") : Ka.Size(a.Size);
         }
     }
     public string UpdatedText => Latest == null ? "—" : Ka.Date(Latest.Published);
@@ -130,6 +149,7 @@ public sealed class AppVM : Bindable
     public string BadgeText =>
         _busy ? "მიმდინარეობს"
         : _loading ? "…"
+        : IsSoon && !IsInstalled ? "მალე"
         : HasUpdate ? "განახლება"
         : IsInstalled ? "დაინსტალირებულია"
         : Latest != null ? "ხელმისაწვდომია"
@@ -178,7 +198,7 @@ public sealed class AppVM : Bindable
         _loading = true; RaiseState();
         try
         {
-            var rels = await GitHub.GetReleasesAsync(Entry.RepoOwner, Entry.RepoName, 5, force);
+            var rels = IsSoon ? new List<ReleaseInfo>() : await GitHub.GetReleasesAsync(Entry.RepoOwner, Entry.RepoName, 5, force);
             _releases = rels ?? new();
             var rec = Installer.GetInstalled(Id);
             _installedAt = rec?.InstalledAt;
@@ -247,7 +267,7 @@ public sealed class AppVM : Bindable
     public async Task InstallAsync()
     {
         var rel = Latest;
-        if (rel == null) return;
+        if (rel == null || (IsSoon && !IsInstalled)) return;
         IsBusy = true; Progress = 0; BusyText = "მზადდება…";
         try
         {

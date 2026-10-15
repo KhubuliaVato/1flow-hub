@@ -372,6 +372,11 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
+                <StackPanel>
+                    <Border HorizontalAlignment="Left" CornerRadius="4" Padding="7,2" Margin="0,0,0,12"
+                            Background="{Binding StageBackground}">
+                        <TextBlock Text="{Binding StageText}" FontSize="11" FontWeight="Medium" Foreground="{Binding StageBrush}"/>
+                    </Border>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -387,7 +392,7 @@
                         </Grid.ColumnDefinitions>
                         <v:AppIconTile Width="44" Height="44"/>
                         <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,0,0,0"/>
                             <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                                 <Ellipse Width="6" Height="6" Fill="{Binding BadgeForeground}" VerticalAlignment="Center" Margin="0,1,6,0"/>
                                 <TextBlock Text="{Binding BadgeText}" FontSize="12" Foreground="{Binding BadgeForeground}"/>
@@ -415,6 +420,7 @@
                                 Command="{Binding PrimaryCommand}"/>
                     </Grid>
                 </Grid>
+                </StackPanel>
             </Border>
         </DataTemplate>
 

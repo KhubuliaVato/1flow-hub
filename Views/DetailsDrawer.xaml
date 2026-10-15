@@ -33,7 +33,9 @@
                     <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                         <Ellipse Width="6" Height="6" Fill="{Binding BadgeForeground}" VerticalAlignment="Center" Margin="0,1,7,0"/>
                         <TextBlock Text="{Binding BadgeText}" FontSize="12.5" Foreground="{Binding BadgeForeground}"/>
-                        <TextBlock Text="{Binding CategoryText}" Style="{StaticResource Hint}" Margin="10,0,0,0"/>
+                        <Border Margin="10,0,0,0" CornerRadius="4" Padding="7,1" Background="{Binding StageBackground}">
+                            <TextBlock Text="{Binding StageText}" FontSize="11.5" FontWeight="Medium" Foreground="{Binding StageBrush}"/>
+                        </Border>
                     </StackPanel>
                 </StackPanel>
                 <Button Grid.Column="2" Style="{StaticResource IconBtn}" Content="&#xE8BB;" FontSize="11" VerticalAlignment="Top"
@@ -44,6 +46,11 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Margin="22,18,22,18">
                 <TextBlock Text="{Binding Description}" FontSize="13" LineHeight="20" Foreground="#C9C9D1" TextWrapping="Wrap"/>
+
+                <Border Visibility="{Binding HasStageNote, Converter={StaticResource B2V}}" Margin="0,16,0,0" Padding="14,10"
+                        CornerRadius="6" Background="{Binding StageBackground}" BorderBrush="{Binding StageBrush}" BorderThickness="1">
+                    <TextBlock Text="{Binding StageNote}" FontSize="12.5" LineHeight="18" TextWrapping="Wrap" Foreground="{Binding StageBrush}"/>
+                </Border>
 
                 <StackPanel Visibility="{Binding IsBusy, Converter={StaticResource B2V}}" Margin="0,16,0,0">
                     <TextBlock Text="{Binding StatusText}" Style="{StaticResource Hint}"/>

@@ -109,7 +109,7 @@
                                             <v:AppIconTile Width="34" Height="34" HorizontalAlignment="Left"/>
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
                                                 <TextBlock Text="{Binding Name}" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Text="{Binding CategoryText}" Style="{StaticResource Hint}" FontSize="11.5"/>
+                                                <TextBlock Text="{Binding StageText}" Foreground="{Binding StageBrush}" FontSize="11.5"/>
                                             </StackPanel>
                                             <TextBlock Grid.Column="2" Text="{Binding VersionText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">

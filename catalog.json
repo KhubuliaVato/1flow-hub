@@ -8,7 +8,8 @@
     "repoOwner": "KhubuliaVato",
     "repoName": "flow-downloader",
     "assetMatch": "downloader.zip",
-    "executableName": "downloader.exe"
+    "executableName": "downloader.exe",
+    "status": "ready"
   },
   {
     "id": "super-recorder",
@@ -19,6 +20,33 @@
     "repoOwner": "KhubuliaVato",
     "repoName": "super-recorder",
     "assetMatch": "SuperRecorder.zip",
-    "executableName": "SuperRecorder.exe"
+    "executableName": "SuperRecorder.exe",
+    "status": "ready"
+  },
+  {
+    "id": "soundpanel",
+    "name": "1Flow SoundPanel",
+    "iconText": "♪",
+    "iconUrl": "https://raw.githubusercontent.com/KhubuliaVato/soundpanel/main/app.ico",
+    "description": "ხმოვანი ბიბლიოთეკა, სწრაფი ძებნა, ეფექტები, მინი-პლეერი, ხმოვანი ბრძანებები და ჩამოტვირთვა.",
+    "repoOwner": "KhubuliaVato",
+    "repoName": "soundpanel",
+    "category": "აუდიო",
+    "assetMatch": "1FlowSoundPanel.zip",
+    "executableName": "1Flow.SoundPanel.exe",
+    "status": "beta"
+  },
+  {
+    "id": "ai-assistant",
+    "name": "1Flow AiAssistant",
+    "iconText": "✦",
+    "iconUrl": "https://raw.githubusercontent.com/KhubuliaVato/aiassistant/main/assets/logos/logo.png",
+    "description": "ვიდეოს AI დამუშავება სიახლეების გუნდისთვის: ვერტიკალიზაცია, მონტაჟი, AI ფონი, სახის დაბუნდოვნება, ხმის ჩაწერა და გადმოწერა.",
+    "repoOwner": "KhubuliaVato",
+    "repoName": "aiassistant",
+    "category": "AI",
+    "assetMatch": "1FlowAiAssistant.zip",
+    "executableName": "1FlowAiAssistant.exe",
+    "status": "soon"
   }
 ]
