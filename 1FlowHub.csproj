@@ -9,7 +9,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>OneFlowHub</RootNamespace>
     <AssemblyName>1FlowHub</AssemblyName>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <Product>1Flow HUB</Product>
     <Company>1Flow</Company>
     <ApplicationIcon>assets\app.ico</ApplicationIcon>

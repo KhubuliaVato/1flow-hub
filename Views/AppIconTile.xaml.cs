@@ -16,8 +16,8 @@ public partial class AppIconTile : UserControl
     {
         double w = ActualWidth > 0 ? ActualWidth : Width;
         if (double.IsNaN(w) || w <= 0) return;
-        Frame.CornerRadius = new CornerRadius(w * 0.20);
+        Frame.CornerRadius = new CornerRadius(w * 0.24);
         Glyph.FontSize = w * 0.42;
-        Img.Margin = new Thickness(w * 0.14);
+        Img.Margin = new Thickness(0);
     }
 }

@@ -217,7 +217,9 @@ public sealed class AppVM : Bindable
         if (_icon != null || string.IsNullOrWhiteSpace(Entry.IconUrl)) return;
         try
         {
-            var path = Path.Combine(Paths.Cache, $"icon_{Id}.png");
+            var key = Convert.ToHexString(System.Security.Cryptography.SHA1.HashData(
+                System.Text.Encoding.UTF8.GetBytes(Entry.IconUrl!)))[..10];
+            var path = Path.Combine(Paths.Cache, $"icon_{Id}_{key}.png");
             byte[] bytes;
             if (File.Exists(path) && DateTime.Now - File.GetLastWriteTime(path) < TimeSpan.FromDays(3))
                 bytes = await File.ReadAllBytesAsync(path);
